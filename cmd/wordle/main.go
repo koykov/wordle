@@ -20,14 +20,9 @@ var (
 func init() {
 	var err error
 
-	rf := func(v *string, names []string, value, usage string) {
-		for i := range names {
-			flag.StringVar(v, names[i], value, usage)
-		}
-	}
-	rf(&fdb, []string{"database", "db"}, "", "Path to nouns5 database.")
-	rf(&fpat, []string{"pattern", "pat"}, "", "Pattern to match words.")
-	rf(&fneg, []string{"negative", "neg"}, "", "List of chars to exclude.")
+	flag.StringVar(&fdb, "database", "", "Path to nouns5 database.")
+	flag.StringVar(&fpat, "pattern", "", "Pattern to match words.")
+	flag.StringVar(&fneg, "negative", "", "List of chars to exclude.")
 	flag.Parse()
 
 	if len(fdb) == 0 {

@@ -24,7 +24,7 @@ type rule struct {
 }
 
 var (
-	patternRE = regexp.MustCompile(`([A-Z]|[*]|\^[A-Z])`)
+	patternRE = regexp.MustCompile(`([a-z]|[*]|\^[a-z])`)
 )
 
 func (db *DB) Load(path string) (err error) {
@@ -101,7 +101,9 @@ func (db DB) checkMatch(x string, rules [5]rule, req []byte) bool {
 }
 
 func (db DB) parseRules(pattern, negative string) (r [WordSize]rule, req []byte, err error) {
-	m := patternRE.FindAllStringSubmatch(pattern, -1)
+	pl := strings.ToLower(pattern)
+	nl := strings.ToLower(negative)
+	m := patternRE.FindAllStringSubmatch(pl, -1)
 	if len(m) != WordSize {
 		err = fmt.Errorf("pattern has %d rules, but need %d", len(m), WordSize)
 		return
@@ -112,9 +114,9 @@ func (db DB) parseRules(pattern, negative string) (r [WordSize]rule, req []byte,
 		'y': {}, 'z': {},
 	}
 	neg := map[byte]struct{}{}
-	for i := 0; i < len(negative); i++ {
-		neg[negative[i]] = struct{}{}
-		delete(allow, negative[i])
+	for i := 0; i < len(nl); i++ {
+		neg[nl[i]] = struct{}{}
+		delete(allow, nl[i])
 	}
 	exact := make(map[byte]struct{}, WordSize)
 	for i := 0; i < WordSize; i++ {

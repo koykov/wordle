@@ -7,6 +7,7 @@ import (
 	"os"
 	"regexp"
 	"sort"
+	"strings"
 )
 
 const (
@@ -63,9 +64,10 @@ func (db DB) checkMatch(x string, rules [5]rule, req []byte) bool {
 	if len(x) != WordSize {
 		return false
 	}
+	xl := strings.ToLower(x)
 	for i := 0; i < WordSize; i++ {
 		r := rules[i]
-		c := x[i]
+		c := xl[i]
 		if r.exact > 0 {
 			if r.exact != c {
 				return false
@@ -86,7 +88,7 @@ func (db DB) checkMatch(x string, rules [5]rule, req []byte) bool {
 	for i := 0; i < len(req); i++ {
 		var m bool
 		for j := 0; j < WordSize; j++ {
-			if x[j] == req[i] {
+			if xl[j] == req[i] {
 				m = true
 				break
 			}
@@ -105,9 +107,9 @@ func (db DB) parseRules(pattern, negative string) (r [WordSize]rule, req []byte,
 		return
 	}
 	allow := map[byte]struct{}{
-		'A': {}, 'B': {}, 'C': {}, 'D': {}, 'E': {}, 'F': {}, 'G': {}, 'H': {}, 'I': {}, 'J': {}, 'K': {}, 'L': {},
-		'M': {}, 'N': {}, 'O': {}, 'P': {}, 'Q': {}, 'R': {}, 'S': {}, 'T': {}, 'U': {}, 'V': {}, 'W': {}, 'X': {},
-		'Y': {}, 'Z': {},
+		'a': {}, 'b': {}, 'c': {}, 'd': {}, 'e': {}, 'f': {}, 'g': {}, 'h': {}, 'i': {}, 'j': {}, 'k': {}, 'l': {},
+		'm': {}, 'n': {}, 'o': {}, 'p': {}, 'q': {}, 'r': {}, 's': {}, 't': {}, 'u': {}, 'v': {}, 'w': {}, 'x': {},
+		'y': {}, 'z': {},
 	}
 	neg := map[byte]struct{}{}
 	for i := 0; i < len(negative); i++ {

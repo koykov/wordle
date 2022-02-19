@@ -131,7 +131,6 @@ func (db DB) parseRules(pattern, negative string) (r [WordSize]rule, req []byte,
 			req = append(req, b)
 		} else if b != '*' {
 			exact[b] = struct{}{}
-			delete(allow, b)
 		}
 	}
 	for i := 0; i < WordSize; i++ {

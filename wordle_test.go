@@ -12,17 +12,17 @@ func TestPatternParse(t *testing.T) {
 	var stages = []stage{
 		{
 			pattern: "*****",
-			expect:  "[ABCDEFGHIJKLMNOPQRSTUVWXYZ][ABCDEFGHIJKLMNOPQRSTUVWXYZ][ABCDEFGHIJKLMNOPQRSTUVWXYZ][ABCDEFGHIJKLMNOPQRSTUVWXYZ][ABCDEFGHIJKLMNOPQRSTUVWXYZ]",
+			expect:  "[abcdefghijklmnopqrstuvwxyz][abcdefghijklmnopqrstuvwxyz][abcdefghijklmnopqrstuvwxyz][abcdefghijklmnopqrstuvwxyz][abcdefghijklmnopqrstuvwxyz]",
 		},
 		{
-			pattern: "H*^E^R*",
-			negative: "UIOBNM",
-			expect:  "H[ACDEFGHJKLPQRSTVWXYZ][ACDFGHJKLPQRSTVWXYZ][ACDEFGHJKLPQSTVWXYZ][ACDEFGHJKLPQRSTVWXYZ]",
+			pattern:  "h*^e^r*",
+			negative: "uiobnm",
+			expect:   "h[acdefghjklpqrstvwxyz][acdfghjklpqrstvwxyz][acdefghjklpqstvwxyz][acdefghjklpqrstvwxyz]",
 		},
 		{
-			pattern: "*^R^U**",
-			negative: "BSH",
-			expect:  "[ACDEFGIJKLMNOPQRTUVWXYZ][ACDEFGIJKLMNOPQTUVWXYZ][ACDEFGIJKLMNOPQRTVWXYZ][ACDEFGIJKLMNOPQRTUVWXYZ][ACDEFGIJKLMNOPQRTUVWXYZ]",
+			pattern:  "*^r^u**",
+			negative: "bsh",
+			expect:   "[acdefgijklmnopqrtuvwxyz][acdefgijklmnopqtuvwxyz][acdefgijklmnopqrtvwxyz][acdefgijklmnopqrtuvwxyz][acdefgijklmnopqrtuvwxyz]",
 		},
 	}
 	conv := func(rules [5]rule) (r string) {
@@ -34,14 +34,14 @@ func TestPatternParse(t *testing.T) {
 	for _, st := range stages {
 		t.Run(st.pattern, func(t *testing.T) {
 			var db DB
-			pos, err := db.parseRules(st.pattern, st.negative)
+			rules, _, err := db.parseRules(st.pattern, st.negative)
 			if err != nil {
 				if err != st.err {
 					t.Error(err)
 				}
 				return
 			}
-			s := conv(pos)
+			s := conv(rules)
 			if s != st.expect {
 				t.Errorf("pattern parse fail: need '%s', got '%s'", st.expect, s)
 			}
